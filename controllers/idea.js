@@ -88,11 +88,11 @@ exports.findAllIdeas = (req, res, next) => {
 exports.updateInterest = (req, res, next) => {
   //console.log(`\nInteressado na ideia: ${req.body.idea_id} - usuario: ${req.user._id} - interessado? ${req.body.interested}`)
   const validationErrors = [];
-  if (!req.isAuthenticated()) {    return res.redirect('/login');  }
-  if (validator.isEmpty(req.body.idea_id)){    validationErrors.push({ msg: 'Error: Idea not selected.'});  }
+  if (!req.isAuthenticated()) { req.flash('info', { msg: 'Por favor, faça sua identificação.' }); res.redirect('/'); }
+  if (validator.isEmpty(req.body.idea_id)){    validationErrors.push({ msg: 'Erro: Ideia não selecionada.'});  }
   if (validationErrors.length){
     req.flash('errors', validationErrors);
-    return res.redirect('/ideias');
+    return res.redirect('/');
   }
   
   Idea.findById(req.body.idea_id, (err, idea) => {
@@ -114,13 +114,13 @@ exports.updateInterest = (req, res, next) => {
       if (err){
         if (err.code === 11000) {
           req.flash('errors', { msg: 'Você já registrou interesse nesta ideia.' });
-          return res.redirect('/ideias');
+          return res.redirect('/');
         }
         console.log(err);
         return next(err);
       }
       req.flash('sucess', { msg: 'Seu interesse nesta ideia foi registrado.'})
-      res.redirect('/ideias');
+      res.redirect('/');
     });
   });
 }

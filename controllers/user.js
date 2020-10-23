@@ -28,8 +28,8 @@ exports.getLogin = (req, res) => {
  */
 exports.postLogin = (req, res, next) => {
   const validationErrors = [];
-  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
-  if (validator.isEmpty(req.body.password)) validationErrors.push({ msg: 'Password cannot be blank.' });
+  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Por favor informe um email válido.' });
+  if (validator.isEmpty(req.body.password)) validationErrors.push({ msg: 'A senha não pode ser em branco.' });
 
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
@@ -45,7 +45,7 @@ exports.postLogin = (req, res, next) => {
     }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
-      req.flash('success', { msg: 'Success! You are logged in.' });
+      req.flash('success', { msg: 'Show! Você está logado.' });
       res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
@@ -58,7 +58,7 @@ exports.postLogin = (req, res, next) => {
 exports.logout = (req, res) => {
   req.logout();
   req.session.destroy((err) => {
-    if (err) console.log('Error : Failed to destroy the session during logout.', err);
+    if (err) console.log('Erro : Falha ao remover sessão durante logout.', err);
     req.user = null;
     res.redirect('/');
   });
@@ -83,9 +83,9 @@ exports.getSignup = (req, res) => {
  */
 exports.postSignup = (req, res, next) => {
   const validationErrors = [];
-  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
-  if (!validator.isLength(req.body.password, { min: 8 })) validationErrors.push({ msg: 'Password must be at least 8 characters long' });
-  if (req.body.password !== req.body.confirmPassword) validationErrors.push({ msg: 'Passwords do not match' });
+  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Por favor informe um email válido.' });
+  if (!validator.isLength(req.body.password, { min: 8 })) validationErrors.push({ msg: 'A senha precisa ter no mínimo 8 caracteres.' });
+  if (req.body.password !== req.body.confirmPassword) validationErrors.push({ msg: 'As senhas não são idênticas.' });
 
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
@@ -101,7 +101,7 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
     if (existingUser) {
-      req.flash('errors', { msg: 'Account with that email address already exists.' });
+      req.flash('errors', { msg: 'Uma conta com este email já está cadastrada.' });
       return res.redirect('/signup');
     }
     user.save((err) => {
@@ -132,7 +132,7 @@ exports.getAccount = (req, res) => {
  */
 exports.postUpdateProfile = (req, res, next) => {
   const validationErrors = [];
-  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
+  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Por favor informe um email válido.' });
 
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
@@ -151,12 +151,12 @@ exports.postUpdateProfile = (req, res, next) => {
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
-          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+          req.flash('errors', { msg: 'O email informado já está associado a outra conta.' });
           return res.redirect('/account');
         }
         return next(err);
       }
-      req.flash('success', { msg: 'Profile information has been updated.' });
+      req.flash('success', { msg: 'Informações de perfil atualizadas.' });
       res.redirect('/account');
     });
   });
@@ -168,8 +168,8 @@ exports.postUpdateProfile = (req, res, next) => {
  */
 exports.postUpdatePassword = (req, res, next) => {
   const validationErrors = [];
-  if (!validator.isLength(req.body.password, { min: 8 })) validationErrors.push({ msg: 'Password must be at least 8 characters long' });
-  if (req.body.password !== req.body.confirmPassword) validationErrors.push({ msg: 'Passwords do not match' });
+  if (!validator.isLength(req.body.password, { min: 8 })) validationErrors.push({ msg: 'A senha precisa ter no mínimo 8 caracteres.' });
+  if (req.body.password !== req.body.confirmPassword) validationErrors.push({ msg: 'As senhas não são idênticas.' });
 
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
@@ -181,7 +181,7 @@ exports.postUpdatePassword = (req, res, next) => {
     user.password = req.body.password;
     user.save((err) => {
       if (err) { return next(err); }
-      req.flash('success', { msg: 'Password has been changed.' });
+      req.flash('success', { msg: 'Senha alterada com sucesso.' });
       res.redirect('/account');
     });
   });
@@ -195,7 +195,7 @@ exports.postDeleteAccount = (req, res, next) => {
   User.deleteOne({ _id: req.user.id }, (err) => {
     if (err) { return next(err); }
     req.logout();
-    req.flash('info', { msg: 'Your account has been deleted.' });
+    req.flash('info', { msg: 'Sua conta foi apagada.' });
     res.redirect('/');
   });
 };
@@ -219,15 +219,15 @@ exports.getOauthUnlink = (req, res, next) => {
       && tokensWithoutProviderToUnlink.length === 0
     ) {
       req.flash('errors', {
-        msg: `The ${_.startCase(_.toLower(provider))} account cannot be unlinked without another form of login enabled.`
-          + ' Please link another account or add an email address and password.'
+        msg: `Sua conta ${_.startCase(_.toLower(provider))} não pode ser desconectada. Deve haver ao menos uma conectada.`
+          + ' Por favor, conecte outra conta ou preencha seu perfil (email e senha).'
       });
       return res.redirect('/account');
     }
     user.tokens = tokensWithoutProviderToUnlink;
     user.save((err) => {
       if (err) { return next(err); }
-      req.flash('info', { msg: `${_.startCase(_.toLower(provider))} account has been unlinked.` });
+      req.flash('info', { msg: `Sua conta ${_.startCase(_.toLower(provider))} foi desconectada.` });
       res.redirect('/account');
     });
   });
@@ -242,7 +242,7 @@ exports.getReset = (req, res, next) => {
     return res.redirect('/');
   }
   const validationErrors = [];
-  if (!validator.isHexadecimal(req.params.token)) validationErrors.push({ msg: 'Invalid Token.  Please retry.' });
+  if (!validator.isHexadecimal(req.params.token)) validationErrors.push({ msg: 'Token inválido.  Por favor, tente novamente.' });
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
     return res.redirect('/forgot');
@@ -254,7 +254,7 @@ exports.getReset = (req, res, next) => {
     .exec((err, user) => {
       if (err) { return next(err); }
       if (!user) {
-        req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+        req.flash('errors', { msg: 'O link para troca da senha é inválido ou expirou.' });
         return res.redirect('/forgot');
       }
       res.render('account/reset', {
@@ -269,12 +269,12 @@ exports.getReset = (req, res, next) => {
  */
 exports.getVerifyEmailToken = (req, res, next) => {
   if (req.user.emailVerified) {
-    req.flash('info', { msg: 'The email address has been verified.' });
+    req.flash('info', { msg: 'Seu e-mail foi verificado com sucesso.' });
     return res.redirect('/account');
   }
 
   const validationErrors = [];
-  if (req.params.token && (!validator.isHexadecimal(req.params.token))) validationErrors.push({ msg: 'Invalid Token.  Please retry.' });
+  if (req.params.token && (!validator.isHexadecimal(req.params.token))) validationErrors.push({ msg: 'Token inválido.  Por favor, tente novamente.' });
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
     return res.redirect('/account');
@@ -285,13 +285,13 @@ exports.getVerifyEmailToken = (req, res, next) => {
       .findOne({ email: req.user.email })
       .then((user) => {
         if (!user) {
-          req.flash('errors', { msg: 'There was an error in loading your profile.' });
+          req.flash('errors', { msg: 'Houve um erro ao carregar seu perfil.' });
           return res.redirect('back');
         }
         user.emailVerificationToken = '';
         user.emailVerified = true;
         user = user.save();
-        req.flash('info', { msg: 'Thank you for verifying your email address.' });
+        req.flash('info', { msg: 'Obrigado por validar seu email.' });
         return res.redirect('/account');
       })
       .catch((error) => {
@@ -392,9 +392,9 @@ exports.getVerifyEmail = (req, res, next) => {
  */
 exports.postReset = (req, res, next) => {
   const validationErrors = [];
-  if (!validator.isLength(req.body.password, { min: 8 })) validationErrors.push({ msg: 'Password must be at least 8 characters long' });
-  if (req.body.password !== req.body.confirm) validationErrors.push({ msg: 'Passwords do not match' });
-  if (!validator.isHexadecimal(req.params.token)) validationErrors.push({ msg: 'Invalid Token.  Please retry.' });
+  if (!validator.isLength(req.body.password, { min: 8 })) validationErrors.push({ msg: 'A senha precisa ter no mínimo 8 caracteres.' });
+  if (req.body.password !== req.body.confirm) validationErrors.push({ msg: 'As senhas não são idênticas.' });
+  if (!validator.isHexadecimal(req.params.token)) validationErrors.push({ msg: 'Token inválido.  Por favor, tente novamente.' });
 
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
@@ -489,7 +489,7 @@ exports.getForgot = (req, res) => {
  */
 exports.postForgot = (req, res, next) => {
   const validationErrors = [];
-  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
+  if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Por favor informe um email válido.' });
 
   if (validationErrors.length) {
     req.flash('errors', validationErrors);

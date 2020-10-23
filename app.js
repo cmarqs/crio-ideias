@@ -136,14 +136,14 @@ app.post('/', passportConfig.isAuthenticated, ideaController.updateInterest)
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
-app.get('/forgot', userController.getForgot);
-app.post('/forgot', userController.postForgot);
+// app.get('/forgot', userController.getForgot);
+// app.post('/forgot', userController.postForgot);
 app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
+// app.get('/contact', contactController.getContact);
+// app.post('/contact', contactController.postContact);
 app.get('/account/verify', passportConfig.isAuthenticated, userController.getVerifyEmail);
 app.get('/account/verify/:token', passportConfig.isAuthenticated, userController.getVerifyEmailToken);
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
@@ -160,37 +160,37 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * API examples routes.
  */
-app.get('/api', apiController.getApi);
-app.get('/api/lastfm', apiController.getLastfm);
-app.get('/api/nyt', apiController.getNewYorkTimes);
-app.get('/api/steam', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getSteam);
-app.get('/api/stripe', apiController.getStripe);
-app.post('/api/stripe', apiController.postStripe);
-app.get('/api/scraping', apiController.getScraping);
-app.get('/api/twilio', apiController.getTwilio);
-app.post('/api/twilio', apiController.postTwilio);
-app.get('/api/foursquare', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFoursquare);
-app.get('/api/tumblr', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTumblr);
-app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
-app.get('/api/github', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGithub);
-app.get('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTwitter);
-app.post('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postTwitter);
-app.get('/api/twitch', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTwitch);
-app.get('/api/instagram', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getInstagram);
-app.get('/api/paypal', apiController.getPayPal);
-app.get('/api/paypal/success', apiController.getPayPalSuccess);
-app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-app.get('/api/lob', apiController.getLob);
-app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);
-app.post('/api/upload', upload.single('myFile'), lusca({ csrf: true }), apiController.postFileUpload);
-app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getPinterest);
-app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
-app.get('/api/here-maps', apiController.getHereMaps);
-app.get('/api/google-maps', apiController.getGoogleMaps);
-app.get('/api/google/drive', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGoogleDrive);
-app.get('/api/chart', apiController.getChart);
-app.get('/api/google/sheets', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGoogleSheets);
-app.get('/api/quickbooks', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getQuickbooks);
+// app.get('/api', apiController.getApi);
+// app.get('/api/lastfm', apiController.getLastfm);
+// app.get('/api/nyt', apiController.getNewYorkTimes);
+// app.get('/api/steam', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getSteam);
+// app.get('/api/stripe', apiController.getStripe);
+// app.post('/api/stripe', apiController.postStripe);
+// app.get('/api/scraping', apiController.getScraping);
+// app.get('/api/twilio', apiController.getTwilio);
+// app.post('/api/twilio', apiController.postTwilio);
+// app.get('/api/foursquare', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFoursquare);
+// app.get('/api/tumblr', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTumblr);
+// app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
+// app.get('/api/github', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGithub);
+// app.get('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTwitter);
+// app.post('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postTwitter);
+// app.get('/api/twitch', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTwitch);
+// app.get('/api/instagram', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getInstagram);
+// app.get('/api/paypal', apiController.getPayPal);
+// app.get('/api/paypal/success', apiController.getPayPalSuccess);
+// app.get('/api/paypal/cancel', apiController.getPayPalCancel);
+// app.get('/api/lob', apiController.getLob);
+// app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);
+// app.post('/api/upload', upload.single('myFile'), lusca({ csrf: true }), apiController.postFileUpload);
+// app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getPinterest);
+// app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
+// app.get('/api/here-maps', apiController.getHereMaps);
+// app.get('/api/google-maps', apiController.getGoogleMaps);
+// app.get('/api/google/drive', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGoogleDrive);
+// app.get('/api/chart', apiController.getChart);
+// app.get('/api/google/sheets', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGoogleSheets);
+// app.get('/api/quickbooks', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getQuickbooks);
 
 /**
  * OAuth authentication routes. (Sign in)
