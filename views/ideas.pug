@@ -7,37 +7,23 @@ block content
         hr.my-4
         p As ideias que atigirem maior número de interessados serão colocadas em prática. Envie também a sua!
         a.btn.btn-primary.btn-lg(href="#" role="button") Saber mais
-    .row
-        .col-6
-            .card
-                img.card-img-top(src="https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg" alt="...")
-                .card-body
-                    h5.card-title Card Title
-                    p.card-text Some quick example text to build on the card title and make up the bulk of the card's content.
-                    a.btn.btn-primary(href="#") Go somewhere
 
-        .col-6
-            .card
-                img.card-img-top(src="https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg" alt="...")
-                .card-body
-                    h5.card-title Card Title
-                    p.card-text Some quick example text to build on the card title and make up the bulk of the card's content.
-                    a.btn.btn-primary(href="#") Go somewhere
-
-    .row
-        .col-6
-            .card
-                img.card-img-top(src="https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg" alt="...")
-                .card-body
-                    h5.card-title Card Title
-                    p.card-text Some quick example text to build on the card title and make up the bulk of the card's content.
-                    a.btn.btn-primary(href="#") Go somewhere
-
-        .col-6
-            .card
-                img.card-img-top(src="https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg" alt="...")
-                .card-body
-                    h5.card-title Card Title
-                    p.card-text Some quick example text to build on the card title and make up the bulk of the card's content.
-                    a.btn.btn-primary(href="#") Go somewhere
-
+    - if (values.length && values.length > 0)
+        each chunk in values.length ? values : ['sem ideias :(']
+            .row
+                each data in chunk
+                    .col-6
+                        .card
+                            img.card-img-top(src=data.img_url alt=data.title)
+                            .card-body
+                                h5.card-title= data.title
+                                p.card-text= data.short_description
+                                spam=data.qtt_interest
+                                form(method='POST')
+                                    input(type='hidden', name='_csrf', value=_csrf)
+                                    input(type='hidden', name='idea_id', value=data.id)
+                                    input(type='hidden', name='interested', value=data.interested)
+                                    button.btn(class=(data.interested ? 'btn-warning' : 'btn-primary'))(type='submit')=(data.interested ? 'To dentro!' : 'Eu quero!')
+            br
+    - else
+        p Sem ideias :(

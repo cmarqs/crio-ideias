@@ -794,13 +794,13 @@ exports.getGoogleSheets = (req, res) => {
     auth: authObj
   });
 
-  const url = 'https://docs.google.com/spreadsheets/d/12gm6fRAp0bC8TB2vh7sSPT3V75Ug99JaA9L0PqiWS2s/edit#gid=0';
+  const url = 'https://docs.google.com/spreadsheets/d/1ltTqIkgAcNspg14aA5hW7IYUDT-yLo_tQPa2aIOsMwU/edit#gid=0';
   const re = /spreadsheets\/d\/([a-zA-Z0-9-_]+)/;
   const id = url.match(re)[1];
 
   sheets.spreadsheets.values.get({
     spreadsheetId: id,
-    range: 'Class Data!A1:F',
+    range: 'Ideias!A1:F',
   }, (err, response) => {
     if (err) return console.log(`The API returned an error: ${err}`);
     res.render('api/google-sheets', {
