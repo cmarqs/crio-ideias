@@ -130,7 +130,9 @@ app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawes
 /**
  * Primary app routes.
  */
-app.get('/', homeController.index);
+app.get('/', ideaController.findAllIdeas)
+app.post('/', passportConfig.isAuthenticated, ideaController.updateInterest)
+//app.get('/', homeController.index); //default now is idea
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -153,8 +155,7 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * Custom routes
  */
-app.get('/ideias', ideaController.findAllIdeas)
-app.post('/ideias', passportConfig.isAuthenticated, ideaController.updateInterest)
+
 
 /**
  * API examples routes.

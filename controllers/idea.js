@@ -74,7 +74,7 @@ exports.findAllIdeas = (req, res, next) => {
         });
 
         res.render('ideas', {
-          title: 'Crio Ideas',
+          title: 'Ideias',
           values: chunk(viewData, 2),
         });
       })
