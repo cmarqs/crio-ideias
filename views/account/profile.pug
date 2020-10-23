@@ -1,0 +1,141 @@
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 Profile Information
+
+  form(action='/account/profile', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold(for='email') Email
+      .col-md-7
+        input.form-control(type='email', name='email', id='email', value=user.email, autocomplete='email', required)
+      //- .offset-sm-3.col-md-7.pl-3
+      //-   if user.emailVerified
+      //-     .text-success.font-italic
+      //-       | Verified
+      //-   else
+      //-     .text-danger.font-italic
+      //-       | Unverified: &nbsp;
+      //-       a(href='/account/verify') Send verification email
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold(for='name') Nome completo
+      .col-md-7
+        input.form-control(type='text', name='name', id='name', value=user.profile.name, autocomplete='name')
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold Gênero
+      .col-sm-6
+        .form-check.form-check-inline
+          input(type='radio', class='form-check-input' checked=user.profile.gender == 'male', name='gender', value='male', data-toggle='radio')
+          label.form-check-label Masculino
+
+        .form-check.form-check-inline
+          input(type='radio', class='form-check-input' checked=user.profile.gender == 'female', name='gender', value='female', data-toggle='radio')
+          label.form-check-label Feminino
+
+        .form-check.form-check-inline
+          input(type='radio', class='form-check-input' checked=user.profile.gender == 'other', name='gender', value='other', data-toggle='radio')
+          label.form-check-label Outro
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold(for='location') Endereço
+      .col-md-7
+        input.form-control(type='text', name='location', id='location', value=user.profile.location, autocomplete)
+    .form-group.row
+      //- label.col-md-3.col-form-label.font-weight-bold(for='website') Website
+      //- .col-md-7
+      //-   input.form-control(type='text', name='website', id='website', value=user.profile.website, autocomplete='url')
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold Foto de Perfil
+      .col-sm-4
+        img(src=user.gravatar(), class='profile', width='100', height='100')
+    .form-group
+      .offset-sm-3.col-md-7.pl-2
+        button.btn.btn.btn-primary(type='submit')
+          i.fas.fa-pencil-alt.fa-sm
+          | Atualizar meu Perfil
+
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 Mudar Senha
+
+  form(action='/account/password', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold(for='password') Nova Senha
+      .col-md-7
+        input.form-control(type='password', name='password', id='password', autocomplete='new-password', minlength='8', required)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold(for='confirmPassword') Confirmar Nova Senha
+      .col-md-7
+        input.form-control(type='password', name='confirmPassword', id='confirmPassword', autocomplete='new-password', minlength='8', required)
+    .form-group
+      .offset-sm-3.col-md-7.pl-2
+        button.btn.btn-primary(type='submit')
+          i.fas.fa-lock.fa-sm
+          | Confirmar Mudança de Senha
+
+  br
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 Apagar Conta
+
+  form(action='/account/delete', method='POST', onsubmit="return confirm('Deseja mesmo apagar sua conta?');")
+    .form-group
+      p.offset-sm-3.col-md-7.pl-2 Você pode apagar sua conta, mas lembre-se que todas as ideias que se interessou serão perdidas.
+      input(type='hidden', name='_csrf', value=_csrf)
+      .offset-sm-3.col-md-7.pl-2
+        button.btn.btn-danger(type='submit')
+          i.fas.fa-trash-alt.fa-sm
+          | Apagar minha Conta
+
+  br
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 Contas Conectadas
+  .form-group
+    .offset-sm-3.col-md-7.pl-2
+      if user.instagram
+        p.mb-1: a.text-danger(href='/account/unlink/instagram') Desconectar Instagram
+      else
+        p.mb-1: a(href='/auth/instagram') Conectar conta Instagram
+    .offset-sm-3.col-md-7.pl-2
+      if user.google
+        p.mb-1: a.text-danger(href='/account/unlink/google') Desconectar Google
+      else
+        p.mb-1: a(href='/auth/google') Conectar conta Google
+    .offset-sm-3.col-md-7.pl-2
+      if user.facebook
+        p.mb-1: a.text-danger(href='/account/unlink/facebook') Desconectar Facebook
+      else
+        p.mb-1: a(href='/auth/facebook') Conectar conta Facebook
+      if user.snapchat
+        p.mb-1: a.text-danger(href='/account/unlink/snapchat') Desconectar Snapchat
+      else
+        p.mb-1: a(href='/auth/snapchat') Conectar conta Snapchat
+    .offset-sm-3.col-md-7.pl-2
+      if user.twitter
+        p.mb-1: a.text-danger(href='/account/unlink/twitter') Desconectar Twitter
+      else
+        p.mb-1: a(href='/auth/twitter') Conectar conta Twitter
+    .offset-sm-3.col-md-7.pl-2
+      if user.github
+        p.mb-1: a.text-danger(href='/account/unlink/github') Desconectar GitHub
+      else
+        p.mb-1: a(href='/auth/github') Conectar conta GitHub
+    .offset-sm-3.col-md-7.pl-2
+      if user.linkedin
+        p.mb-1: a.text-danger(href='/account/unlink/linkedin') Desconectar LinkedIn
+      else
+        p.mb-1: a(href='/auth/linkedin') Conectar conta LinkedIn
+    .offset-sm-3.col-md-7.pl-2
+      if user.steam
+        p.mb-1: a.text-danger(href='/account/unlink/steam') Desconectar Steam
+      else
+        p.mb-1: a(href='/auth/steam') Conectar conta Steam
+    .offset-sm-3.col-md-7.pl-2
+      if user.twitch
+        p.mb-1: a.text-danger(href='/account/unlink/twitch') Desconectar Twitch
+      else
+        p.mb-1: a(href='/auth/twitch') Conectar conta Twitch
+    .offset-sm-3.col-md-7.pl-2
+      if user.quickbooks
+        p.mb-1: a.text-danger(href='/account/unlink/quickbooks') Desconectar QuickBooks
+      else
+        p.mb-1: a(href='/auth/quickbooks') Conectar conta QuickBooks

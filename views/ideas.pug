@@ -1,0 +1,33 @@
+extends layout
+
+block content
+    .jumbotron
+        h1.display-4 Crio+
+        p.lead Este é o celeiro de ideias do Crio. De qual você gostaria de fazer parte?
+        hr.my-4
+        p As ideias que atigirem maior número de interessados serão colocadas em prática. Envie também a sua!
+        a.btn.btn-primary.btn-lg(href="#" role="button") Saber mais
+
+    - if (values.length && values.length > 0)
+        each chunk in values.length ? values : ['sem ideias :(']
+            .row
+                each data in chunk
+                    .col-6
+                        .card
+                            img.card-img-top(src=data.img_url alt=data.title)
+                            .card-body
+                                h5.card-title= data.title
+                                p.card-text= data.short_description
+
+                                i.fa.fa-users= ' ' + data.qtt_interest
+                                form(method='POST')
+                                    input(type='hidden', name='_csrf', value=_csrf)
+                                    input(type='hidden', name='idea_id', value=data.id)
+                                    input(type='hidden', name='interested', value=data.interested)
+
+                                    - var style = (data.interested ? 'btn-warning' : 'btn-primary')
+                                    - var text = (data.interested ? 'To dentro!' : 'Eu quero!')
+                                    button.btn(class=style)(type='submit')=text
+            br
+    - else
+        p Sem ideias :(
