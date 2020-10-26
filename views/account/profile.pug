@@ -105,10 +105,6 @@ block content
         p.mb-1: a.text-danger(href='/account/unlink/facebook') Desconectar Facebook
       else
         p.mb-1: a(href='/auth/facebook') Conectar conta Facebook
-      if user.snapchat
-        p.mb-1: a.text-danger(href='/account/unlink/snapchat') Desconectar Snapchat
-      else
-        p.mb-1: a(href='/auth/snapchat') Conectar conta Snapchat
     .offset-sm-3.col-md-7.pl-2
       if user.twitter
         p.mb-1: a.text-danger(href='/account/unlink/twitter') Desconectar Twitter
@@ -124,18 +120,3 @@ block content
         p.mb-1: a.text-danger(href='/account/unlink/linkedin') Desconectar LinkedIn
       else
         p.mb-1: a(href='/auth/linkedin') Conectar conta LinkedIn
-    .offset-sm-3.col-md-7.pl-2
-      if user.steam
-        p.mb-1: a.text-danger(href='/account/unlink/steam') Desconectar Steam
-      else
-        p.mb-1: a(href='/auth/steam') Conectar conta Steam
-    .offset-sm-3.col-md-7.pl-2
-      if user.twitch
-        p.mb-1: a.text-danger(href='/account/unlink/twitch') Desconectar Twitch
-      else
-        p.mb-1: a(href='/auth/twitch') Conectar conta Twitch
-    .offset-sm-3.col-md-7.pl-2
-      if user.quickbooks
-        p.mb-1: a.text-danger(href='/account/unlink/quickbooks') Desconectar QuickBooks
-      else
-        p.mb-1: a(href='/auth/quickbooks') Conectar conta QuickBooks
