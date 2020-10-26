@@ -125,6 +125,10 @@ app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawes
  */
 app.get('/', ideaController.findAllIdeas)
 app.post('/', passportConfig.isAuthenticated, ideaController.updateInterest)
+app.get('/google6d6c405465b425ce.html', function (req, res, next) {
+  res.send("google-site-verification: google6d6c405465b425ce.html")
+})
+
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
