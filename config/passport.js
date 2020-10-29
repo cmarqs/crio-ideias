@@ -722,6 +722,14 @@ exports.isAuthenticated = (req, res, next) => {
   res.redirect('/login');
 };
 
+exports.isAdmin = (req, res, next) => {
+  console.log(req.user)
+  if (req.user.isAdmin){
+    return next();
+  }
+  res.redirect('/login');
+}
+
 /**
  * Authorization Required middleware.
  */

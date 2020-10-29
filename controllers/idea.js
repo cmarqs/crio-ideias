@@ -2,46 +2,6 @@ const validator = require('validator');
 const Idea = require('../models/Idea');
 const moment = require('moment')
 
-/**
- * POST /idea
- * Create a new idea by admin
- */
-exports.createIdea = (req, res, next) => {
-  console.log(`entrou ${req.body.title}`)
-
-  const validationErrors = [];
-  if (!validator.isLength(req.body.title, { min:0, max: 50})) 
-    validationErrors.push({ msg: 'The title must be provided and its content must be 50 caracteres max'});
-  if (validator.isEmpty(req.body.short_description))
-   validationErrors.push({ msg: 'Please provide some description'});
-
-  if (validationErrors.length){
-    console.log(JSON.stringify(validationErrors))
-    req.flash('errors', validationErrors);
-    return res.redirect('/')
-  }
-
-  const idea = new Idea({
-    title: req.body.title,
-    short_description: req.body.short_description,
-    details: req.body.details,
-    img_url: req.body.img_url,
-    enable: req.body.enable ? req.body.enable : false,
-    published_date: moment(),
-    user_id_created: req.user,
-  });
-
-  idea.save(idea)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      req.flash('errors', { msg: 'Some error has occurred.'});
-      console.log(err);
-      return next(err);
-    });
-};
-
 exports.findAllIdeas = (req, res, next) => {
   const chunk = (arr, chunkSize) => {
     var R = [];
@@ -124,3 +84,62 @@ exports.updateInterest = (req, res, next) => {
     });
   });
 }
+
+
+/** ADMIN AREA */
+
+exports.testAdmin = (req, res, next) => {
+  const validationErrors = [];
+  if (validationErrors.length){
+    req.flash('errors', validationErrors);
+    return res.redirect('/');
+  }
+
+  console.log(req.user)
+
+  res.render('admin/ideas', {
+    title: 'Admin - Ideias',
+    username: req.user.profile.name, 
+    isAdmin: req.user.isAdmin
+  });
+}
+
+/**
+ * POST /idea
+ * Create a new idea by admin
+ */
+exports.createIdea = (req, res, next) => {
+  console.log(`entrou ${req.body.title}`)
+
+  const validationErrors = [];
+  if (!validator.isLength(req.body.title, { min:0, max: 50})) 
+    validationErrors.push({ msg: 'The title must be provided and its content must be 50 caracteres max'});
+  if (validator.isEmpty(req.body.short_description))
+   validationErrors.push({ msg: 'Please provide some description'});
+
+  if (validationErrors.length){
+    console.log(JSON.stringify(validationErrors))
+    req.flash('errors', validationErrors);
+    return res.redirect('/')
+  }
+
+  const idea = new Idea({
+    title: req.body.title,
+    short_description: req.body.short_description,
+    details: req.body.details,
+    img_url: req.body.img_url,
+    enable: req.body.enable ? req.body.enable : false,
+    published_date: moment(),
+    user_id_created: req.user,
+  });
+
+  idea.save(idea)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      req.flash('errors', { msg: 'Some error has occurred.'});
+      console.log(err);
+      return next(err);
+    });
+};

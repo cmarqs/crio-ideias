@@ -141,6 +141,11 @@ app.post('/account/delete', passportConfig.isAuthenticated, userController.postD
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 /**
+ * Admin routes
+ */
+app.get('/admin/ideas', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.testAdmin)
+
+/**
  * OAuth authentication routes. (Sign in)
  */
 app.get('/auth/instagram', passport.authenticate('instagram', { scope: ['basic', 'public_content'] }));
