@@ -10,7 +10,7 @@ const ideaSchema = new mongoose.Schema({
     user_id_created: { type: mongoose.Schema.Types.ObjectId, ref: 'ideas'},
 
     interest: [{
-        user_id_interested: { type: mongoose.Schema.Types.ObjectId, unique: true},
+        user_id_interested: { type: mongoose.Schema.Types.ObjectId },
         moment_registered: Date
     }]
 }, { timestamps: true });

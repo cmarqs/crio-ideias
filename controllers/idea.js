@@ -86,36 +86,44 @@ exports.updateInterest = (req, res, next) => {
 }
 
 
-/** ADMIN AREA */
+/** ADMIN AREA ********************************************************/
 
-exports.testAdmin = (req, res, next) => {
+/**
+ * Lista ideias cadastradas para admin
+ */
+exports.listIdeas = (req, res, next) => {
   const validationErrors = [];
   if (validationErrors.length){
     req.flash('errors', validationErrors);
     return res.redirect('/');
   }
 
-  console.log(req.user)
-
-  res.render('admin/ideas', {
-    title: 'Admin - Ideias',
-    username: req.user.profile.name, 
-    isAdmin: req.user.isAdmin
-  });
+  Idea.find()
+  .then(data => {
+    res.render('admin/ideas', {
+      title: 'Admin - Ideias',
+      values: data,
+    });
+  })
+  .catch(err => {
+    console.log(err);
+    req.flash('errors', { msg: 'Some error has occurred.'});
+    return next(err);
+  })
 }
 
 /**
  * POST /idea
  * Create a new idea by admin
  */
-exports.createIdea = (req, res, next) => {
-  console.log(`entrou ${req.body.title}`)
+exports.saveIdea = (req, res, next) => {
+  console.log(req.body)
 
   const validationErrors = [];
   if (!validator.isLength(req.body.title, { min:0, max: 50})) 
-    validationErrors.push({ msg: 'The title must be provided and its content must be 50 caracteres max'});
+    validationErrors.push({ msg: 'Um título deve ser informado e deve conter no máximo 50 caracteres.'});
   if (validator.isEmpty(req.body.short_description))
-   validationErrors.push({ msg: 'Please provide some description'});
+   validationErrors.push({ msg: 'Por favor escreva algum resumo.'});
 
   if (validationErrors.length){
     console.log(JSON.stringify(validationErrors))
@@ -128,14 +136,14 @@ exports.createIdea = (req, res, next) => {
     short_description: req.body.short_description,
     details: req.body.details,
     img_url: req.body.img_url,
-    enable: req.body.enable ? req.body.enable : false,
+    enable: req.body.enable ? (req.body.enable = 'on' ? true : false) : false,
     published_date: moment(),
-    user_id_created: req.user,
+    user_id_created: req.user_id,
   });
 
   idea.save(idea)
     .then(data => {
-      res.send(data);
+      res.redirect('/admin/ideas');
     })
     .catch(err => {
       req.flash('errors', { msg: 'Some error has occurred.'});

@@ -6,9 +6,65 @@ block content
     .pb-2.mt-2.mb-4.border-bottom
         h2
             i.fas.fa-server(style='color: #1B4A7D').fa-sm
-            | Gestão de Idéias
+            | Gestão de Ideias
     
-    div
-        p= username
-        p= isAdmin
-    
+    .row.justify-content-between.pb-2.mt-2.mb-4
+        .col-4
+            h4
+                | Ideias cadastradas
+        .col-4.text-right
+            button.btn.btn-primary(name="btnNovaIdeia") Nova Ideia
+
+
+    #lista(style='display:block')
+        - if (values.length)
+            table.table
+                thead
+                    th(scope="col") Título
+                    th(scope="col") Resumo
+                    th(scope="col") Data Publicação
+                    th(scope="col") Interessados
+                    th(scope="col") Opções
+                tbody
+                each i in values
+                    tr
+                        td=i.title
+                        td=i.short_description
+                        td= moment(i.published_date).format('MM/DD/YYYY')
+                        td=(i.interest) ? i.interest.length : 0
+                        td
+                            button(name="btnEdit").btn.btn-outline-primary Editar
+                            |  
+                            button(name="btnDelete").btn.btn-outline-danger Apagar
+        - else
+            h5 Sem ideias :(
+            p Tente cadastrar utilizando o botão "Nova Ideia"
+
+
+    #formulario(style='display:none')   
+        form(method='POST').pb-2.mt-2.mb-4
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+                label(for="title") Título (Nome da Ideia)
+                input.form-control(type="text", id='title', name='title')
+            .form-group
+                label(for="short_description") Resumo
+                textarea.form-control(id='short_description', name='short_description', rows="2")
+            .form-group
+                label(for="img_url") Figura
+                input.form-control-file(type="file", id='img_url', name='img_url', accept="image/*")
+            .form-group
+                label(for="details") Detalhes
+                textarea.form-control(id='details', name='details', rows="10")
+            .form-group
+                input.form-check-input(type="checkbox", id='enable', name='enable', checked="true")
+                label(for="enable") Exibir ideia na home
+
+            button(type="button", name="btnVoltar").btn.btn-outline-secondary Voltar
+            button(type="submit", name="btnSalvar").btn.btn-primary.m-2 Gravar Ideia
+
+        script.
+            tinymce.init({
+                selector: 'textarea#details',
+                menubar: false
+            });
