@@ -1,0 +1,16 @@
+
+.modal.fade(tabindex="-1", id="modalDelete", aria-hidden="true")
+    .modal-dialog
+        form(id="frmDelete", method="post")
+            input(type='hidden', name='_csrf', value=_csrf)
+            .modal-content
+                .modal-header
+                    h5.modal-title= 'Apagar ideia?'
+                    button(type=button, data-dismiss="modal", arial-label="Fechar").close
+                        span(arial-hidden="true") 
+                .modal-body
+                    p Nome da ideia aqui
+
+                .modal-footer
+                    button(type="button", data-dismiss="modal").btn.btn-secondary Fechar
+                    button(type="submit").btn.btn-primary Apagar esta ideia

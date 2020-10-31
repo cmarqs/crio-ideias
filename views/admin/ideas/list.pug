@@ -1,0 +1,51 @@
+extends ../../layout
+
+block content
+
+
+    .pb-2.mt-2.mb-4.border-bottom
+        h2
+            i.fas.fa-server(style='color: #1B4A7D').fa-sm
+            | Gestão de Ideias
+    
+    .row.justify-content-between.pb-2.mt-2.mb-4
+        .col-4
+            h4
+                | Ideias cadastradas
+        .col-4.text-right
+            a.btn.btn-primary(name="btnNovaIdeia", href="/admin/ideas/new") Nova Ideia
+
+
+    - if (values.length)
+        table.table
+            thead
+                th(scope="col") Título
+                th(scope="col") Resumo
+                th(scope="col") Data Publicação
+                th(scope="col") Interessados
+                th(scope="col") Opções
+            tbody
+            each i in values
+                tr
+                    td=i.title
+                    td=i.short_description
+                    td= moment(i.published_date).format('MM/DD/YYYY')
+                    td=(i.interest) ? i.interest.length : 0
+                    td
+                        a(name="btnEdit", href="/admin/ideas/" + i._id).btn.btn-outline-primary Editar
+                        |  
+                        button(type="button", name="btnDelete", data-toggle="modal", data-target="#modalDelete", data-id=i._id).btn.btn-outline-danger Apagar
+    - else
+        h5 Sem ideias :(
+        p Tente cadastrar utilizando o botão "Nova Ideia"
+
+    script.
+        const setIdToDelete = (evt) => {
+            const btnDelete = (evt.target);
+            document.querySelector('#frmDelete').action = `/admin/ideas/delete/${btnDelete.dataset.id}`;
+            document.querySelector('.modal-body p').textContent = btnDelete.offsetParent.parentElement.cells[0].textContent;
+        }
+        const btnDelete = document.querySelectorAll('[name=btnDelete]');
+        idea = btnDelete.forEach(del => {    del.addEventListener('click', setIdToDelete);  });
+
+    include modal

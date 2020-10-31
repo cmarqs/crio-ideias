@@ -145,7 +145,11 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * Admin routes
  */
 app.get('/admin/ideas', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.listIdeas);
-app.post('/admin/ideas', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.saveIdea);
+app.get('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getEmptyForm);
+app.get('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getIdeaById);
+app.post('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.newIdea);
+app.post('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.editIdea);
+app.post('/admin/ideas/delete/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.deleteIdea);
 
 /**
  * OAuth authentication routes. (Sign in)

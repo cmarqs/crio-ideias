@@ -1,6 +1,7 @@
 const validator = require('validator');
 const Idea = require('../models/Idea');
-const moment = require('moment')
+const moment = require('moment');
+const { data } = require('jquery');
 
 exports.findAllIdeas = (req, res, next) => {
   const chunk = (arr, chunkSize) => {
@@ -95,12 +96,12 @@ exports.listIdeas = (req, res, next) => {
   const validationErrors = [];
   if (validationErrors.length){
     req.flash('errors', validationErrors);
-    return res.redirect('/');
+    return res.redirect('/admin/ideas/list');
   }
 
   Idea.find()
   .then(data => {
-    res.render('admin/ideas', {
+    res.render('admin/ideas/list', {
       title: 'Admin - Ideias',
       values: data,
     });
@@ -113,12 +114,49 @@ exports.listIdeas = (req, res, next) => {
 }
 
 /**
+ * Return empty form
+ */
+exports.getEmptyForm = (req, res, next) => {
+  res.render('admin/ideas/form', {
+    title: 'Admin - Ideias'
+  })
+}
+
+/**
+ * Find ideias por ID
+ */
+exports.getIdeaById = (req, res, next) => {
+  const { id } = req.params;
+  const validationErrors = [];
+  if (validator.isEmpty(id)) validationErrors.push({ msg: 'Houve uma falha ao capturar o id da ideia a ser editada. Informe o administrador.' });
+  if (validationErrors.length){
+    req.flash('errors', validationErrors);
+    return res.redirect('/admin/ideas/list');
+  }
+
+  function getIdea(err, idea) {
+    if (err) { return next(err); }
+    if (!idea) {
+      req.flash('errors', { msg: 'Não encontramos a ideia passada pelo sistema. Informe o administrador sobre esse evento' });
+      return res.redirect('/admin/ideas/list');
+    }
+    res.render('admin/ideas/form', {
+      title: 'Admin - Ideias',
+      data: idea,
+    });
+  }
+
+  Idea.findById(id, getIdea)
+}
+
+/**
  * POST /idea
  * Create a new idea by admin
  */
-exports.saveIdea = (req, res, next) => {
+exports.newIdea = (req, res, next) => {
+  console.log('new idea')
   console.log(req.body)
-
+  
   const validationErrors = [];
   if (!validator.isLength(req.body.title, { min:0, max: 50})) 
     validationErrors.push({ msg: 'Um título deve ser informado e deve conter no máximo 50 caracteres.'});
@@ -128,7 +166,7 @@ exports.saveIdea = (req, res, next) => {
   if (validationErrors.length){
     console.log(JSON.stringify(validationErrors))
     req.flash('errors', validationErrors);
-    return res.redirect('/')
+    return res.redirect('/admin/ideas/')
   }
 
   const idea = new Idea({
@@ -143,7 +181,8 @@ exports.saveIdea = (req, res, next) => {
 
   idea.save(idea)
     .then(data => {
-      res.redirect('/admin/ideas');
+      req.flash('success', { msg: 'Ideia inserida com sucesso!' });
+      res.redirect('/admin/ideas/');
     })
     .catch(err => {
       req.flash('errors', { msg: 'Some error has occurred.'});
@@ -151,3 +190,86 @@ exports.saveIdea = (req, res, next) => {
       return next(err);
     });
 };
+
+exports.editIdea = (req, res, next) => {
+  console.log('edit idea')
+  console.log(req.body);
+
+  const id = req.params.id;
+
+  const validationErrors = [];
+  if (!id) { validationErrors.push({ msg: 'O id da ideia não foi informada pelo sistema. Acione o administrador.'}); }
+  if (!validator.isLength(req.body.title, { min:0, max: 50})) { validationErrors.push({ msg: 'Um título deve ser informado e deve conter no máximo 50 caracteres.'}); }
+  if (validator.isEmpty(req.body.short_description)) { validationErrors.push({ msg: 'Por favor escreva algum resumo.'});}
+
+  if (validationErrors.length){
+    console.log(JSON.stringify(validationErrors))
+    req.flash('errors', validationErrors);
+    return res.redirect('/admin/ideas/')
+  }
+
+  const idea = new Idea({
+    _id: id,
+    title: req.body.title,
+    short_description: req.body.short_description,
+    details: req.body.details ? req.body.details : '',
+    img_url: req.body.img_url ? req.body.img_url : '',
+    enable: req.body.enable ? (req.body.enable = 'on' ? true : false) : false,
+    published_date: moment(),
+    user_id_created: req.user_id,
+  });
+
+  Idea.findByIdAndUpdate(id, idea)
+  .then(data => {
+    if (!data) {
+      res.status(404).send({
+        message: `A ideia id=${id} não foi encontrada. Informe o erro ao Administrador.`
+      });
+    } 
+    req.flash('success', { msg: 'Ideia atualizada com sucesso!' });
+    res.redirect('/admin/ideas/');
+  })
+  .catch(err => {
+    req.flash('errors', { msg: 'Falha ao atualizar ideia id=' + id});
+    res.status(500).send({
+      message: `A ideia id=${id} não foi atualizada. ${err.message}`
+    })
+    console.log(err);
+    return next(err);
+  });
+}
+
+exports.deleteIdea = (req, res, next) => {
+  console.log('delete idea')
+  console.log(req.body);
+
+  const id = req.params.id;
+
+  const validationErrors = [];
+  if (!id) { validationErrors.push({ msg: 'O id da ideia não foi informada pelo sistema. Acione o administrador.'}); }
+
+  if (validationErrors.length){
+    console.log(JSON.stringify(validationErrors))
+    req.flash('errors', validationErrors);
+    return res.redirect('/admin/ideas/')
+  }
+
+  Idea.findByIdAndDelete(id)
+  .then(data => {
+    if (!data) {
+      res.status(404).send({
+        message: `A ideia id=${id} não foi encontrada. Informe o erro ao Administrador.`
+      });
+    } 
+    req.flash('success', { msg: 'Ideia deletada com sucesso!' });
+    res.redirect('/admin/ideas/');
+  })
+  .catch(err => {
+    req.flash('errors', { msg: 'Falha ao deletar ideia id=' + id});
+    res.status(500).send({
+      message: `A ideia id=${id} não foi deletada. ${err.message}`
+    })
+    console.log(err);
+    return next(err);
+  });
+}
