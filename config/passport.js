@@ -723,7 +723,6 @@ exports.isAuthenticated = (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
-  console.log(req.user)
   if (req.user.isAdmin){
     return next();
   }

@@ -59,6 +59,7 @@ mongoose.connection.on('error', (err) => {
 /**
  * Express configuration.
  */
+app.locals.moment = require('moment');
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));
@@ -143,7 +144,13 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * Admin routes
  */
-app.get('/admin/ideas', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.testAdmin)
+app.get('/admin/ideas', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.listIdeas);
+app.get('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getEmptyForm);
+app.get('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getIdeaById);
+app.post('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.newIdea);
+app.post('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.editIdea);
+app.post('/admin/ideas/delete/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.deleteIdea);
+app.get('/admin/ideas/:id/interesteds', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getIdeaByIdWithInteresteds);
 
 /**
  * OAuth authentication routes. (Sign in)
