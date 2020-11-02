@@ -7,11 +7,11 @@ const ideaSchema = new mongoose.Schema({
     img_url: String,
     enable: Boolean,
     published_date: Date,
-    user_id_created: { type: mongoose.Schema.Types.ObjectId, ref: 'ideas'},
+    user_created: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 
     interest: [{
-        user_id_interested: { type: mongoose.Schema.Types.ObjectId },
-        moment_registered: Date
+        moment_registered: Date,
+        user_interested: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
     }]
 }, { timestamps: true });
 

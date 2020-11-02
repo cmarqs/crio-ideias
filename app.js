@@ -150,6 +150,7 @@ app.get('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdm
 app.post('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.newIdea);
 app.post('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.editIdea);
 app.post('/admin/ideas/delete/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.deleteIdea);
+app.get('/admin/ideas/:id/interesteds', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getIdeaByIdWithInteresteds);
 
 /**
  * OAuth authentication routes. (Sign in)

@@ -1,0 +1,17 @@
+mixin modal(idea_id)
+    .modal.fade(tabindex="-1", id="modalViewInteresteds", aria-hidden="true")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title= 'Interessados na ideia'
+                    button(type=button, data-dismiss="modal", arial-label="Fechar").close
+                        span(arial-hidden="true") 
+                .modal-body
+                    table(id="interesteds", name="interesteds").table
+                        thead
+                            th(scope="col") Nome
+                            th(scope="col") Email
+                            th(scope="col") Data Interesse
+                .modal-footer
+                    button(type="button", data-dismiss="modal").btn.btn-secondary Fechar
+

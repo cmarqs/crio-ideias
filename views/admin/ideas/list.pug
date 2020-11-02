@@ -17,6 +17,7 @@ block content
 
 
     - if (values.length)
+        include interesteds
         table.table
             thead
                 th(scope="col") Título
@@ -29,8 +30,14 @@ block content
                 tr
                     td=i.title
                     td=i.short_description
-                    td= moment(i.published_date).format('MM/DD/YYYY')
-                    td=(i.interest) ? i.interest.length : 0
+                    td= moment(i.published_date).format('DD/MM/YYYY')
+                    td
+                        - if (i.interest && i.interest.length > 0)
+                            +modal(i._id)
+                            button(type="button", name="btnViewInteresteds", data-toggle="modal", data-target="#modalViewInteresteds", data-id=i._id).btn.btn-outline-primary=(i.interest) ? i.interest.length : 0
+                        - else
+                            button(type="button", name="btnViewInteresteds").btn.btn-outline-primary 0
+
                     td
                         a(name="btnEdit", href="/admin/ideas/" + i._id).btn.btn-outline-primary Editar
                         |  
@@ -46,6 +53,49 @@ block content
             document.querySelector('.modal-body p').textContent = btnDelete.offsetParent.parentElement.cells[0].textContent;
         }
         const btnDelete = document.querySelectorAll('[name=btnDelete]');
-        idea = btnDelete.forEach(del => {    del.addEventListener('click', setIdToDelete);  });
+        btnDelete.forEach(del => {    del.addEventListener('click', setIdToDelete);  });
+
+    script(src='/js/lib/jquery.min.js')
+    script(src='/js/lib/bootstrap.min.js')
+    script.
+        function addRow(tableID, data) {
+            let tableRef = document.getElementById(tableID);
+            while(tableRef.hasChildNodes() && tableRef.tBodies.length > 0)
+                tableRef.removeChild(tableRef.lastChild);
+
+            for (let i = 0; i < data.length; i++) {
+                let tbody = tableRef.createTBody();
+                let row = tbody.insertRow(-1);
+
+                const obj = data[i];
+                let cell = row.insertCell(0);
+                cell.textContent = obj.name;
+
+                cell = row.insertCell(1);
+                cell.textContent = obj.email;
+
+                cell = row.insertCell(2);
+                cell.textContent = new Date(obj.moment_registered).toLocaleDateString("pt-BR");
+            }        }
+        function fillTable(data){
+            const table = document.querySelector('#modalViewInteresteds #interesteds');
+            addRow(table.id, data);
+        }
+
+        function makeRequest(theUrl, callback) {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', theUrl);
+            xhr.send();
+            xhr.onload = function() {
+                if (xhr.status != 200) {
+                    console.error(`Error ${xhr.status}: ${xhr.statusText}`);
+                } else {
+                    callback(JSON.parse(xhr.responseText));
+                }
+            };
+        }
+        $('#modalViewInteresteds').on('show.bs.modal', function (e) {
+            makeRequest(`${window.location.href}/${e.relatedTarget.dataset.id}/interesteds`,fillTable);
+        })
 
     include modal
