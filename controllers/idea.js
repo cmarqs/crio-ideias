@@ -92,6 +92,36 @@ exports.updateInterest = (req, res, next) => {
 }
 
 
+/**
+ * Find ideias por ID
+ */
+exports.getIdeaDetails = (req, res, next) => {
+  const { id } = req.params;
+  console.log(req.params);
+  const validationErrors = [];
+  if (validator.isEmpty(id)) validationErrors.push({ msg: 'Houve uma falha ao capturar o id da ideia a ser editada. Informe o administrador.' });
+  if (validationErrors.length){
+    req.flash('errors', validationErrors);
+    return res.redirect('/');
+  }
+
+  function getIdea(err, idea) {
+    if (err) { return next(err); }
+    if (!idea) {
+      req.flash('errors', { msg: 'Não encontramos a ideia passada pelo sistema. Informe o administrador sobre esse evento' });
+      return res.redirect('/');
+    }
+    console.log(idea)
+    res.render('details', {
+      title: 'Ideias',
+      data: idea,
+    });
+  }
+
+  Idea.findById(id, getIdea)
+}
+
+
 /** ADMIN AREA ********************************************************/
 
 /**

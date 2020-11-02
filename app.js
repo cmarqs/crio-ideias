@@ -122,10 +122,15 @@ app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/jquery/dist
 app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts'), { maxAge: 31557600000 }));
 
 /**
- * Primary app routes.
+ * Ideas routes
  */
 app.get('/', ideaController.findAllIdeas)
 app.post('/', passportConfig.isAuthenticated, ideaController.updateInterest)
+app.get('/ideas/:id', ideaController.getIdeaDetails)
+
+/**
+ * Login and account area
+ */
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);

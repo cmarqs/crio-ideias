@@ -28,6 +28,7 @@ block content
                                     - var style = (data.interested ? 'btn-warning' : 'btn-primary')
                                     - var text = (data.interested ? 'To dentro!' : 'Eu quero!')
                                     button.btn(class=style)(type='submit')=text
+                                    a(role="button", href="/ideas/" + data.id).btn.btn-link detalhes
             br
     - else
         p Sem ideias :(
