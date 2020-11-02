@@ -1,9 +1,6 @@
 const validator = require('validator');
 const Idea = require('../models/Idea');
 const moment = require('moment');
-const { data } = require('jquery');
-const User = require('../models/User');
-const { UserPage } = require('twilio/lib/rest/chat/v1/service/user');
 
 exports.findAllIdeas = (req, res, next) => {
   const chunk = (arr, chunkSize) => {
@@ -86,9 +83,54 @@ exports.updateInterest = (req, res, next) => {
         next(err);
       }
       req.flash('sucess', { msg: 'Seu interesse nesta ideia foi registrado.'})
-      res.redirect('/');
+      const url = new URL(req.headers.referer)
+      res.redirect(url.pathname);
     });
   });
+}
+
+
+/**
+ * Find ideias por ID
+ */
+exports.getIdeaDetails = (req, res, next) => {
+  const { id } = req.params;
+  const validationErrors = [];
+  if (validator.isEmpty(id)) validationErrors.push({ msg: 'Houve uma falha ao capturar o id da ideia a ser editada. Informe o administrador.' });
+  if (validationErrors.length){
+    req.flash('errors', validationErrors);
+    return res.redirect('/');
+  }
+
+  function getIdea(err, idea) {
+    if (err) { return next(err); }
+    if (!idea) {
+      req.flash('errors', { msg: 'Não encontramos a ideia passada pelo sistema. Informe o administrador sobre esse evento' });
+      return res.redirect('/');
+    }
+
+    const newData = {};
+    //if has user authenticated, get the ideas hi got interested
+    let has_interest;
+    if (idea.interest && req.isAuthenticated()){
+      has_interest = idea.interest.find(i => String(i.user_interested._id) == String(req.user._id))
+    }
+    
+    newData.interested = has_interest ? has_interest._id : '';
+    newData.qtt_interest = idea.interest.length;
+    newData.id = idea._id;
+    newData.title = idea.title;
+    newData.short_description = idea.short_description;
+    newData.details = idea.details;
+    newData.img_url = (idea.img_url ? idea.img_url:"https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg");
+
+    res.render('details', {
+      title: 'Ideias',
+      data: newData,
+    });
+  }
+
+  Idea.findById(id, getIdea)
 }
 
 
