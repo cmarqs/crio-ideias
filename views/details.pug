@@ -1,8 +1,18 @@
 extends layout
 
 block content
-    .jumbotron
+    .jumbotron.text-white.bg-cover(style='background-repeat: no-repeat; background-size: cover; background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.9) 100%), url('+ data.img_url +')')
         .container
-            h1.display-4 Fluid jumbotron
-            p.lead This is a modified jumbotron that occupies the entire horizontal space of its parent.
-    div aqui vai tudo
+            h1.display-4= data.title
+            p.lead= data.short_description
+    form(action="/", method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        input(type='hidden', name='idea_id', value=data.id)
+        input(type='hidden', name='interested', value=data.interested)
+
+        - var style = (data.interested ? 'btn-warning' : 'btn-primary')
+        - var text = (data.interested ? 'To dentro!' : 'Eu quero!')
+        button.btn(class=style)(type='submit')=text
+        i.fa.fa-users= ' ' + data.qtt_interest
+        hr
+    article!= data.details
