@@ -10,8 +10,10 @@
       ul.nav.navbar-nav
         li.nav-item(class=(title === 'Ideias') ? 'active' : undefined)
           a.nav-link(href='/') Ideias (Home)
-        //- li.nav-item(class=(title === 'API Examples') ? 'active' : undefined)
-        //-   a.nav-link(href='/api') API Examples
+        //- admin menu
+        if user && user.isAdmin
+          li.nav-item(class=(title === 'Admin - Ideias') ? 'active' : undefined)
+            a.nav-link(href='/admin/ideas') Gestão de Ideias
         //- li.nav-item(class=(title === 'Contact') ? 'active' : undefined)
         //-   a.nav-link(href='/contact') Contact
         //- li.nav-item(class=(title === 'Status') ? 'active' : undefined)

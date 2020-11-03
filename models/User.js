@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   emailVerificationToken: String,
   emailVerified: Boolean,
+  isAdmin: Boolean,
 
   snapchat: String,
   facebook: String,
@@ -28,7 +29,11 @@ const userSchema = new mongoose.Schema({
     location: String,
     website: String,
     picture: String
-  }
+  },
+
+  ideas_created: [{ type: mongoose.Schema.ObjectId, ref: "Idea"  }],
+  ideas_interested: [{ type: mongoose.Schema.ObjectId, ref: "Idea"  }]
+
 }, { timestamps: true });
 
 /**

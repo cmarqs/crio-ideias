@@ -80,7 +80,7 @@ passport.use(new SnapchatStrategy({
     User.findOne({ snapchat: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Snapchat account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Existe atualmente uma conta Snapchat associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -90,7 +90,7 @@ passport.use(new SnapchatStrategy({
           user.profile.name = user.profile.name || profile.displayName;
           user.profile.picture = user.profile.picture || profile.bitmoji.avatarUrl;
           user.save((err) => {
-            req.flash('info', { msg: 'Snapchat account has been linked.' });
+            req.flash('info', { msg: 'Sua conta Snapchat foi associada.' });
             done(err, user);
           });
         });
@@ -132,7 +132,7 @@ passport.use(new FacebookStrategy({
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Existe atualmente uma conta Facebook associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -143,7 +143,7 @@ passport.use(new FacebookStrategy({
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
           user.save((err) => {
-            req.flash('info', { msg: 'Facebook account has been linked.' });
+            req.flash('info', { msg: 'Sua conta Facebook foi associada.' });
             done(err, user);
           });
         });
@@ -158,7 +158,7 @@ passport.use(new FacebookStrategy({
       User.findOne({ email: profile._json.email }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
+          req.flash('errors', { msg: 'Já existe uma conta usando este endereço de e-mail. Faça login nessa conta e vincule-a ao Facebook manualmente em Configurações da conta.' });
           done(err);
         } else {
           const user = new User();
@@ -191,7 +191,7 @@ passport.use(new GitHubStrategy({
   if (req.user) {
     User.findOne({ github: profile.id }, (err, existingUser) => {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a GitHub account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Existe atualmente uma conta GitHub associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -203,7 +203,7 @@ passport.use(new GitHubStrategy({
           user.profile.location = user.profile.location || profile._json.location;
           user.profile.website = user.profile.website || profile._json.blog;
           user.save((err) => {
-            req.flash('info', { msg: 'GitHub account has been linked.' });
+            req.flash('info', { msg: 'Sua conta GitHub foi associada.' });
             done(err, user);
           });
         });
@@ -218,7 +218,7 @@ passport.use(new GitHubStrategy({
       User.findOne({ email: profile._json.email }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with GitHub manually from Account Settings.' });
+          req.flash('errors', { msg: 'Já existe uma conta usando este endereço de e-mail. Faça login nessa conta e vincule-a ao GitHub manualmente em Configurações da conta.' });
           done(err);
         } else {
           const user = new User();
@@ -251,7 +251,7 @@ passport.use(new TwitterStrategy({
     User.findOne({ twitter: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Existe atualmente uma conta Twitter associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -263,7 +263,7 @@ passport.use(new TwitterStrategy({
           user.profile.picture = user.profile.picture || profile._json.profile_image_url_https;
           user.save((err) => {
             if (err) { return done(err); }
-            req.flash('info', { msg: 'Twitter account has been linked.' });
+            req.flash('info', { msg: 'Sua conta Twitter foi associada.' });
             done(err, user);
           });
         });
@@ -305,7 +305,7 @@ const googleStrategyConfig = new GoogleStrategy({
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser && (existingUser.id !== req.user.id)) {
-        req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Existe atualmente uma conta Google associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -321,7 +321,7 @@ const googleStrategyConfig = new GoogleStrategy({
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || profile._json.picture;
           user.save((err) => {
-            req.flash('info', { msg: 'Google account has been linked.' });
+            req.flash('info', { msg: 'Sua conta Google foi associada.' });
             done(err, user);
           });
         });
@@ -336,7 +336,7 @@ const googleStrategyConfig = new GoogleStrategy({
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
+          req.flash('errors', { msg: 'Já existe uma conta usando este endereço de e-mail. Faça login nessa conta e vincule-a ao Google manualmente em Configurações da conta.' });
           done(err);
         } else {
           const user = new User();
@@ -376,7 +376,7 @@ passport.use(new LinkedInStrategy({
     User.findOne({ linkedin: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a LinkedIn account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Existe atualmente uma conta LinkedIn associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -387,7 +387,7 @@ passport.use(new LinkedInStrategy({
           user.profile.picture = user.profile.picture || profile.photos[3].value;
           user.save((err) => {
             if (err) { return done(err); }
-            req.flash('info', { msg: 'LinkedIn account has been linked.' });
+            req.flash('info', { msg: 'Sua conta LinkedIn foi associada.' });
             done(err, user);
           });
         });
@@ -402,7 +402,7 @@ passport.use(new LinkedInStrategy({
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with LinkedIn manually from Account Settings.' });
+          req.flash('errors', { msg: 'Já existe uma conta usando este endereço de e-mail. Faça login nessa conta e vincule-a ao LinkedIn manualmente em Configurações da conta.' });
           done(err);
         } else {
           const user = new User();
@@ -433,7 +433,7 @@ passport.use(new InstagramStrategy({
     User.findOne({ instagram: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already an Instagram account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'There is already an Instagram associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -444,7 +444,7 @@ passport.use(new InstagramStrategy({
           user.profile.picture = user.profile.picture || profile._json.data.profile_picture;
           user.profile.website = user.profile.website || profile._json.data.website;
           user.save((err) => {
-            req.flash('info', { msg: 'Instagram account has been linked.' });
+            req.flash('info', { msg: 'Sua conta Instagram foi associada.' });
             done(err, user);
           });
         });
@@ -487,7 +487,7 @@ const twitchStrategyConfig = new TwitchStrategy({
     User.findOne({ twitch: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser && (existingUser.id !== req.user.id)) {
-        req.flash('errors', { msg: 'There is already a Twitch account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Existe atualmente uma conta Twitch associada que pertence a você. Entre utilizando esta conta e remova para depois associar a conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -503,7 +503,7 @@ const twitchStrategyConfig = new TwitchStrategy({
           user.profile.email = user.profile.gender || profile.email;
           user.profile.picture = user.profile.picture || profile.profile_image_url;
           user.save((err) => {
-            req.flash('info', { msg: 'Twitch account has been linked.' });
+            req.flash('info', { msg: 'Sua conta Twitch foi associada.' });
             done(err, user);
           });
         });
@@ -518,7 +518,7 @@ const twitchStrategyConfig = new TwitchStrategy({
       User.findOne({ email: profile.email }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Twtich manually from Account Settings.' });
+          req.flash('errors', { msg: 'Já existe uma conta usando este endereço de e-mail. Faça login nessa conta e vincule-a ao Twitch manualmente em Configurações da conta.' });
           done(err);
         } else {
           const user = new User();
@@ -721,6 +721,13 @@ exports.isAuthenticated = (req, res, next) => {
   }
   res.redirect('/login');
 };
+
+exports.isAdmin = (req, res, next) => {
+  if (req.user.isAdmin){
+    return next();
+  }
+  res.redirect('/login');
+}
 
 /**
  * Authorization Required middleware.

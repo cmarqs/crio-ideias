@@ -104,11 +104,7 @@ block content
       if user.facebook
         p.mb-1: a.text-danger(href='/account/unlink/facebook') Desvincular Facebook
       else
-        p.mb-1: a(href='/auth/facebook') Vincular conta Facebook
-      if user.snapchat
-        p.mb-1: a.text-danger(href='/account/unlink/snapchat') Desvincular Snapchat
-      else
-        p.mb-1: a(href='/auth/snapchat') Vincular conta Snapchat
+        p.mb-1: a(href='/auth/facebook') Conectar conta Facebook
     .offset-sm-3.col-md-7.pl-2
       if user.twitter
         p.mb-1: a.text-danger(href='/account/unlink/twitter') Desvincular Twitter
@@ -123,19 +119,4 @@ block content
       if user.linkedin
         p.mb-1: a.text-danger(href='/account/unlink/linkedin') Desvincular LinkedIn
       else
-        p.mb-1: a(href='/auth/linkedin') Vincular conta LinkedIn
-    .offset-sm-3.col-md-7.pl-2
-      if user.steam
-        p.mb-1: a.text-danger(href='/account/unlink/steam') Desvincular Steam
-      else
-        p.mb-1: a(href='/auth/steam') Vincular conta Steam
-    .offset-sm-3.col-md-7.pl-2
-      if user.twitch
-        p.mb-1: a.text-danger(href='/account/unlink/twitch') Desvincular Twitch
-      else
-        p.mb-1: a(href='/auth/twitch') Vincular conta Twitch
-    .offset-sm-3.col-md-7.pl-2
-      if user.quickbooks
-        p.mb-1: a.text-danger(href='/account/unlink/quickbooks') Desvincular QuickBooks
-      else
-        p.mb-1: a(href='/auth/quickbooks') Vincular conta QuickBooks
+        p.mb-1: a(href='/auth/linkedin') Conectar conta LinkedIn

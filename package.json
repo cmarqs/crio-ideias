@@ -1,15 +1,15 @@
 {
-  "name": "hackathon-starter",
-  "version": "6.0.1",
-  "description": "A boilerplate for Node.js web applications",
+  "name": "crio-ideias",
+  "version": "0.0.1",
+  "description": "Aplicativo de pool de ideias do Crio Café",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "git@github.com:cmarqs/crio-ideias.git"
   },
   "license": "MIT",
-  "author": "Sahat Yalkabov",
+  "author": "Cleiton Marques",
   "contributors": [
-    "Yashar Fakhari (https://github.com/YasharF)"
+    "Cleiton Marques (https://github.com/cmarqs)"
   ],
   "scripts": {
     "postinstall": "npm rebuild node-sass",
@@ -38,7 +38,6 @@
     "express-flash": "^0.0.2",
     "express-handlebars": "^5.1.0",
     "express-session": "^1.17.1",
-    "express-status-monitor": "^1.3.3",
     "googleapis": "^61.0.0",
     "instagram-node": "^0.5.8",
     "jquery": "^3.5.1",

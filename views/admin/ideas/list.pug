@@ -1,0 +1,101 @@
+extends ../../layout
+
+block content
+
+
+    .pb-2.mt-2.mb-4.border-bottom
+        h2
+            i.fas.fa-server(style='color: #1B4A7D').fa-sm
+            | Gestão de Ideias
+    
+    .row.justify-content-between.pb-2.mt-2.mb-4
+        .col-4
+            h4
+                | Ideias cadastradas
+        .col-4.text-right
+            a.btn.btn-primary(name="btnNovaIdeia", href="/admin/ideas/new") Nova Ideia
+
+
+    - if (values.length)
+        include interesteds
+        table.table
+            thead
+                th(scope="col") Título
+                th(scope="col") Resumo
+                th(scope="col") Data Publicação
+                th(scope="col") Interessados
+                th(scope="col") Opções
+            tbody
+            each i in values
+                tr
+                    td=i.title
+                    td=i.short_description
+                    td= moment(i.published_date).format('DD/MM/YYYY')
+                    td
+                        - if (i.interest && i.interest.length > 0)
+                            +modal(i._id)
+                            button(type="button", name="btnViewInteresteds", data-toggle="modal", data-target="#modalViewInteresteds", data-id=i._id).btn.btn-outline-primary=(i.interest) ? i.interest.length : 0
+                        - else
+                            button(type="button", name="btnViewInteresteds").btn.btn-outline-primary 0
+
+                    td
+                        a(name="btnEdit", href="/admin/ideas/" + i._id).btn.btn-outline-primary Editar
+                        |  
+                        button(type="button", name="btnDelete", data-toggle="modal", data-target="#modalDelete", data-id=i._id).btn.btn-outline-danger Apagar
+    - else
+        h5 Sem ideias :(
+        p Tente cadastrar utilizando o botão "Nova Ideia"
+
+    script.
+        const setIdToDelete = (evt) => {
+            const btnDelete = (evt.target);
+            document.querySelector('#frmDelete').action = `/admin/ideas/delete/${btnDelete.dataset.id}`;
+            document.querySelector('.modal-body p').textContent = btnDelete.offsetParent.parentElement.cells[0].textContent;
+        }
+        const btnDelete = document.querySelectorAll('[name=btnDelete]');
+        btnDelete.forEach(del => {    del.addEventListener('click', setIdToDelete);  });
+
+    script(src='/js/lib/jquery.min.js')
+    script(src='/js/lib/bootstrap.min.js')
+    script.
+        function addRow(tableID, data) {
+            let tableRef = document.getElementById(tableID);
+            while(tableRef.hasChildNodes() && tableRef.tBodies.length > 0)
+                tableRef.removeChild(tableRef.lastChild);
+
+            for (let i = 0; i < data.length; i++) {
+                let tbody = tableRef.createTBody();
+                let row = tbody.insertRow(-1);
+
+                const obj = data[i];
+                let cell = row.insertCell(0);
+                cell.textContent = obj.name;
+
+                cell = row.insertCell(1);
+                cell.textContent = obj.email;
+
+                cell = row.insertCell(2);
+                cell.textContent = new Date(obj.moment_registered).toLocaleDateString("pt-BR");
+            }        }
+        function fillTable(data){
+            const table = document.querySelector('#modalViewInteresteds #interesteds');
+            addRow(table.id, data);
+        }
+
+        function makeRequest(theUrl, callback) {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', theUrl);
+            xhr.send();
+            xhr.onload = function() {
+                if (xhr.status != 200) {
+                    console.error(`Error ${xhr.status}: ${xhr.statusText}`);
+                } else {
+                    callback(JSON.parse(xhr.responseText));
+                }
+            };
+        }
+        $('#modalViewInteresteds').on('show.bs.modal', function (e) {
+            makeRequest(`${window.location.href}/${e.relatedTarget.dataset.id}/interesteds`,fillTable);
+        })
+
+    include modal
