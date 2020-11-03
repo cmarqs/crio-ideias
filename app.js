@@ -18,7 +18,7 @@ const passport = require('passport');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
 
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const upload = multer({ dest: path.join(__dirname, 'public/images/uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -86,8 +86,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/admin/ideas/new' || req.path.match(/(^\/admin\/ideas\/)\w{24,24}/g)) {
     // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
+    // Se for inserir ou editar uma ideia, passa sem checar o csrf
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -149,12 +150,28 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * Admin routes
  */
+
+ //list
 app.get('/admin/ideas', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.listIdeas);
-app.get('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getEmptyForm);
-app.get('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getIdeaById);
-app.post('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.newIdea);
-app.post('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.editIdea);
+
+
+//form new idea
+app.get('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, lusca({ csrf: true }), ideaController.getEmptyForm);
+//save new idea
+app.post('/admin/ideas/new', passportConfig.isAuthenticated, passportConfig.isAdmin, upload.single('img_url'), lusca({ csrf: true }), ideaController.newIdea);
+
+
+//form edit idea
+app.get('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, lusca({ csrf: true }), ideaController.getIdeaById);
+//save edited idea
+app.post('/admin/ideas/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, upload.single('img_url'), lusca({ csrf: true }), ideaController.editIdea);
+
+
+//delete idea from list
 app.post('/admin/ideas/delete/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.deleteIdea);
+
+
+//set or unset interest on idea
 app.get('/admin/ideas/:id/interesteds', passportConfig.isAuthenticated, passportConfig.isAdmin, ideaController.getIdeaByIdWithInteresteds);
 
 /**

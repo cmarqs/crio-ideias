@@ -22,8 +22,8 @@ block content
     - var details = data ? data.details : ''
     - var enable = data ? data.enable : ''
 
-    form(method="post").pb-2.mt-2.mb-4
-        input(type='hidden', name='_csrf', value=_csrf)
+    form(method="post", enctype="multipart/form-data").pb-2.mt-2.mb-4
+        input(type='hidden', name='_csrf', id='_csrf', value=_csrf)
         input(type='hidden', id='_id', name='_id', value=_id)
         .form-group
             label(for="title") Título (Nome da Ideia)

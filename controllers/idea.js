@@ -1,6 +1,7 @@
 const validator = require('validator');
 const Idea = require('../models/Idea');
 const moment = require('moment');
+const path = require('path');
 
 exports.findAllIdeas = (req, res, next) => {
   const chunk = (arr, chunkSize) => {
@@ -28,7 +29,7 @@ exports.findAllIdeas = (req, res, next) => {
           newData.id = idea._id;
           newData.title = idea.title;
           newData.short_description = idea.short_description;
-          newData.img_url = (idea.img_url ? idea.img_url:"https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg");
+          newData.img_url = (idea.img_url ? path.join('/images/uploads/') + idea.img_url:"https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg");
 
           viewData.push(newData)
         });
@@ -122,8 +123,7 @@ exports.getIdeaDetails = (req, res, next) => {
     newData.title = idea.title;
     newData.short_description = idea.short_description;
     newData.details = idea.details;
-    newData.img_url = (idea.img_url ? idea.img_url:"https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg");
-
+    newData.img_url = (idea.img_url ? path.join('/images/uploads/') + idea.img_url:"https://images.tcdn.com.br/img/img_prod/837998/180_cafe_blend_da_semana_1_1_20200728204612.jpg");
     res.render('details', {
       title: 'Ideias',
       data: newData,
@@ -235,7 +235,8 @@ exports.getIdeaByIdWithInteresteds = (req, res, next) => {
  * Create a new idea by admin
  */
 exports.newIdea = (req, res, next) => {
-  console.log('new idea')
+  // console.log('new idea')
+  // console.log(req.file)
   
   const validationErrors = [];
   if (!validator.isLength(req.body.title, { min:0, max: 50})) 
@@ -248,12 +249,11 @@ exports.newIdea = (req, res, next) => {
     req.flash('errors', validationErrors);
     return res.redirect('/admin/ideas/')
   }
-
   const idea = new Idea({
     title: req.body.title,
     short_description: req.body.short_description,
     details: req.body.details,
-    img_url: req.body.img_url,
+    img_url: req.file ? req.file.filename : '',
     enable: req.body.enable ? (req.body.enable = 'on' ? true : false) : false,
     published_date: moment(),
     user_created: req.user._id,
@@ -274,8 +274,8 @@ exports.newIdea = (req, res, next) => {
 };
 
 exports.editIdea = (req, res, next) => {
-  console.log('edit idea')
-  console.log(req.body);
+  // console.log('edit idea')
+  // console.log(req.file)
 
   const id = req.params.id;
 
@@ -296,7 +296,7 @@ exports.editIdea = (req, res, next) => {
     data.title = req.body.title;
     data.short_description = req.body.short_description;
     data.details = req.body.details ? req.body.details : '';
-    data.img_url = req.body.img_url ? req.body.img_url : '';
+    data.img_url = req.file ? req.file.filename : data.img_url, //se não foi informado, deixa a que estava
     data.enable = req.body.enable ? (req.body.enable = 'on' ? true : false) : false;
     data.save((err) => {
       if (err){
