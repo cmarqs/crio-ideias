@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const Idea = require('./Idea')
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
@@ -51,6 +52,23 @@ userSchema.pre('save', function save(next) {
     });
   });
 });
+
+userSchema.pre('deleteOne', function removeInterest(next) {
+  const user = this;
+  console.log(user._conditions._id);
+
+  Idea.updateMany(
+    { 'interest.user_interested': user._conditions._id }, 
+    { $pull: { interest: {'user_interested': user._conditions._id } }},
+    { multi: true},
+     (err, idea) => {
+       if (err) { console.log(err); }
+        console.log(idea);
+        next();
+      }
+  );
+})
+
 
 /**
  * Helper method for validating user's password.
