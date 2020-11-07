@@ -21,7 +21,10 @@ exports.findAllIdeas = (req, res, next) => {
           //if has user authenticated, get the ideas hi got interested
           let has_interest;
           if (idea.interest && req.isAuthenticated()){
-            has_interest = idea.interest.find(i => String(i.user_interested._id) == String(req.user._id))
+            has_interest = idea.interest.find(i => {
+              if (i.user_interested)
+                String(i.user_interested._id) == String(req.user._id)
+            })
           }
           
           newData.interested = has_interest ? has_interest._id : '';
