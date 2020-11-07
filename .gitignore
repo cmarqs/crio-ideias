@@ -12,6 +12,7 @@ pids
 logs
 results
 tmp
+public/images/uploads/*
 
 # Optional npm cache directory
 .npm
