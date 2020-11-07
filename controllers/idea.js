@@ -23,7 +23,7 @@ exports.findAllIdeas = (req, res, next) => {
           if (idea.interest && req.isAuthenticated()){
             has_interest = idea.interest.find(i => {
               if (i.user_interested)
-                String(i.user_interested._id) == String(req.user._id)
+                return String(i.user_interested._id) == String(req.user._id)
             })
           }
           
